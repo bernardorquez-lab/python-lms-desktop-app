@@ -10,8 +10,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = PROJECT_ROOT / "Database" / "danas_database.db"
 
-SENDER_EMAIL = "bernardorquez@gmail.com"      # ← replace this
-SENDER_PASSWORD = "qbxm eudl lulp qiow"   # ← replace this
+SENDER_EMAIL = "bernardorquez@gmail.com"     
+SENDER_PASSWORD = "qbxm eudl lulp qiow" 
 
 def get_conn():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
