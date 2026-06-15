@@ -1,1 +1,3 @@
 DANAS (Digital Academy for Navigating Academic Skills and Success) is a desktop-based Learning Management System built in Python with object-oriented programming as a framework and Tkinter for the graphical user interface. It is a system designed for instructors to upload and manage their content, while students can enroll in classes and browse through courses.
+
+To start the code go to Login.py, Use the account 
