@@ -8,7 +8,6 @@ from click import clear
 from Database import  database1, student_engine
 import importlib, sys
 
-# Force fresh reload of Student
 if "Student" in sys.modules:
     del sys.modules["Student"]
     
@@ -934,14 +933,14 @@ class DANASLogin:
 
             try:
                 success = database1.create_user(name, username, password, email)
-                print(f"Result: {success}")  # ← debug
+                print(f"Result: {success}")
                 if success:
                     messagebox.showinfo("Account Created", "Your registration was successful!", parent=win)
                     win.destroy()
                 else:
                     messagebox.showerror("Error", "That username is already taken.", parent=win)
             except Exception as ex:
-                print(f"Error: {ex}")  # ← debug
+                print(f"Error: {ex}") 
                 messagebox.showerror("Error", str(ex), parent=win)
 
         tk.Button(win, text="Submit Registration",
@@ -994,7 +993,7 @@ class DANASLogin:
                 self._reset_username = user["username"]
                 status.config(text="Sending OTP...")
                 win.update()
-                sent = database1.send_otp_email(email, otp)  # ← sends to their email
+                sent = database1.send_otp_email(email, otp)
                 if sent:
                     step2()
                 else:
