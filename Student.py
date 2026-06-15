@@ -6,21 +6,12 @@ import shutil
 import sys
 from pathlib import Path
 
-# ── resolve project root so imports work regardless of cwd ───────────────────
 PROJECT_ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 
 class StudentDashboard:
     def __init__(self, root, engine, user_profile):
-        """
-        Parameters
-        ----------
-        root         : tk.Tk / tk.Toplevel
-        engine       : student_engine module  (import student_engine as engine)
-        user_profile : dict with at least {'full_name': ..., 'username': ...}
-                       Build it with  engine.get_user_profile(username)
-        """
         self.root = root
         self.engine = engine
         self.user_profile = user_profile
@@ -33,7 +24,6 @@ class StudentDashboard:
         self.root.resizable(False, False)
         self.main_panel = None
 
-        # ── asset paths (same pattern as FacultyDashboard) ───────────────
         BG_IMAGE   = PROJECT_ROOT / "Assets" / "img 3.png"
         LOGO_IMAGE = PROJECT_ROOT / "Assets" / "img 2.png"
 
@@ -74,13 +64,11 @@ class StudentDashboard:
             fill="white", font=("Georgia", 13, "bold"), justify="left"
         )
 
-        # ── layout constants ──────────────────────────────────────────────
         self.PANEL_X = 420
         self.PANEL_Y = 200
         self.PANEL_W = screen_w - 420 - 60
         self.PANEL_H = screen_h - 200 - 80
 
-        # ── sidebar ───────────────────────────────────────────────────────
         sidebar = tk.Frame(
             root, width=330, height=int(screen_h * 0.75),
             highlightbackground="white", highlightthickness=1
@@ -115,7 +103,6 @@ class StudentDashboard:
             command=self.logout
         ).pack(side="bottom", pady=15)
 
-        # ── dashboard title ───────────────────────────────────────────────
         content_cx = 420 + (screen_w - 420) // 2
         self.canvas.create_text(
             content_cx, 120,
@@ -129,8 +116,6 @@ class StudentDashboard:
         )
 
         self.view()
-
-    # ── helpers ───────────────────────────────────────────────────────────────
 
     def logout(self):
         if messagebox.askyesno("Logout", "Are you sure you want to logout?"):
@@ -178,7 +163,6 @@ class StudentDashboard:
             anchor="nw", window=self.main_panel
         )
 
-    # ── 1. VIEW ENROLLED COURSES ──────────────────────────────────────────────
 
     def view(self):
         self.clear_panel()
@@ -222,7 +206,6 @@ class StudentDashboard:
         cv.bind_all("<MouseWheel>",
                     lambda e: cv.yview_scroll(int(-1*(e.delta/120)), "units"))
 
-        # header
         header = tk.Frame(table, bg="#8c1616")
         header.pack(fill="x", pady=(0, 2))
         for col, label in enumerate(["Course Name", "Code", "Action"]):
@@ -263,14 +246,11 @@ class StudentDashboard:
                 command=lambda c=course["code"]: self.unenroll(c)
             ).grid(row=0, column=2, padx=(0, 8))
 
-    # ── 2. UNENROLL ───────────────────────────────────────────────────────────
 
     def unenroll(self, code):
         if messagebox.askyesno("Unenroll", "Are you sure you want to drop this course?"):
             self.engine.unenroll_student(self.user_profile["username"], code)
             self.view()
-
-    # ── 3. ENROLL ─────────────────────────────────────────────────────────────
 
     def enroll(self):
         self.clear_panel()
@@ -279,7 +259,6 @@ class StudentDashboard:
             bg="#6b0f0f", fg="white", font=("Georgia", 26)
         ).pack(pady=10)
 
-        # scrollable checklist
         wrap = tk.Frame(self.main_panel, bg="#6b0f0f")
         wrap.pack(fill="both", expand=True, padx=30, pady=10)
 
@@ -367,7 +346,6 @@ class StudentDashboard:
         else:
             messagebox.showinfo("No Change", "No new courses were selected.")
 
-    # ── 4. OPEN SPECIFIC COURSE ───────────────────────────────────────────────
 
     def open_course_dashboard(self, course):
         self.clear_panel()
@@ -424,7 +402,6 @@ class StudentDashboard:
         for w in self._course_content.winfo_children():
             w.destroy()
 
-        # ── Overview tab ──────────────────────────────────────────────────
         if tab == "📋 Overview":
             tk.Label(
                 self._course_content,
@@ -447,7 +424,6 @@ class StudentDashboard:
                 font=("Georgia", 12), justify="left"
             ).pack(anchor="w", padx=20)
 
-        # ── Modules tab ───────────────────────────────────────────────────
         elif tab == "📄 Modules":
             wrap = tk.Frame(self._course_content, bg="#7a1212")
             wrap.pack(fill="both", expand=True)
@@ -469,7 +445,6 @@ class StudentDashboard:
             cv.bind_all("<MouseWheel>",
                         lambda e: cv.yview_scroll(int(-1*(e.delta/120)), "units"))
 
-            # fetch real PDFs from the database
             course_id = course.get("course_id")
             materials = (
                 self.engine.get_course_materials(course_id)
@@ -515,15 +490,14 @@ class StudentDashboard:
                     command=lambda p=pdf_path: self.view_pdf(p)
                 ).pack(side="right", padx=5)
 
-    # ── 5. PDF FUNCTIONS ──────────────────────────────────────────────────────
 
     def view_pdf(self, file_path):
         if os.path.exists(file_path):
             try:
-                os.startfile(file_path)          # Windows
+                os.startfile(file_path)     
             except AttributeError:
                 import subprocess
-                subprocess.call(["xdg-open", file_path])   # Linux / Mac
+                subprocess.call(["xdg-open", file_path])  
         else:
             messagebox.showwarning(
                 "File Missing",
