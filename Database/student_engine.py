@@ -2,17 +2,12 @@ import sqlite3
 import hashlib
 from pathlib import Path
 
-# ── Resolve the project root the same way every other module does ─────────────
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = PROJECT_ROOT / "Database" / "danas_database.db"
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Internal helpers
-# ─────────────────────────────────────────────────────────────────────────────
-
 def _connect() -> sqlite3.Connection:
-    """Return a connection with row_factory set to sqlite3.Row."""
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -20,10 +15,6 @@ def _connect() -> sqlite3.Connection:
 
 
 def _ensure_enrollments_table() -> None:
-    """
-    Create the enrollments table if it does not already exist.
-    Called automatically on first use so no separate migration step is needed.
-    """
     conn = _connect()
     conn.execute("""
         CREATE TABLE IF NOT EXISTS enrollments (
@@ -42,20 +33,7 @@ def _ensure_enrollments_table() -> None:
     conn.close()
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Public API
-# ─────────────────────────────────────────────────────────────────────────────
-
 def get_user_profile(username: str) -> dict:
-    """
-    Return a dict with user details for the given username.
-
-    Keys returned
-    -------------
-    id, name, username, role, email
-
-    Returns an empty dict if the user is not found.
-    """
     conn = _connect()
     row = conn.execute(
         "SELECT id, name, username, role, email FROM users WHERE username = ?",
@@ -68,7 +46,7 @@ def get_user_profile(username: str) -> dict:
 
     return {
         "id":        row["id"],
-        "full_name": row["name"],       # StudentDashboard uses "full_name"
+        "full_name": row["name"],    
         "username":  row["username"],
         "role":      row["role"],
         "email":     row["email"] or "",
@@ -76,11 +54,6 @@ def get_user_profile(username: str) -> dict:
 
 
 def get_all_courses() -> list:
-    """
-    Return every course in the database as a list of dicts.
-
-    Keys: course_id, name, code, units, schedule, room, description
-    """
     conn = _connect()
     rows = conn.execute("""
         SELECT course_id,
@@ -99,11 +72,6 @@ def get_all_courses() -> list:
 
 
 def get_student_courses(username: str) -> list:
-    """
-    Return the courses that *username* is currently enrolled in.
-
-    Keys: course_id, name, code, units, schedule, room, description
-    """
     _ensure_enrollments_table()
 
     conn = _connect()
@@ -127,28 +95,16 @@ def get_student_courses(username: str) -> list:
 
 
 def enroll_student(username: str, course_code: str) -> bool:
-    """
-    Enroll *username* in the course identified by *course_code*.
-
-    Returns
-    -------
-    True  – enrollment was created (new row inserted)
-    False – student was already enrolled (duplicate ignored)
-
-    Raises ValueError if the username or course_code does not exist.
-    """
     _ensure_enrollments_table()
 
     conn = _connect()
     try:
-        # Resolve user_id
         user_row = conn.execute(
             "SELECT id FROM users WHERE username = ?", (username,)
         ).fetchone()
         if user_row is None:
             raise ValueError(f"No user found with username '{username}'.")
 
-        # Resolve course_id
         course_row = conn.execute(
             "SELECT course_id FROM courses WHERE course_code = ?", (course_code,)
         ).fetchone()
@@ -166,17 +122,12 @@ def enroll_student(username: str, course_code: str) -> bool:
         return True
 
     except sqlite3.IntegrityError:
-        # UNIQUE constraint → already enrolled
         return False
     finally:
         conn.close()
 
 
 def unenroll_student(username: str, course_code: str) -> None:
-    """
-    Remove *username*'s enrollment in the course identified by *course_code*.
-    Silently does nothing if the enrollment does not exist.
-    """
     _ensure_enrollments_table()
 
     conn = _connect()
@@ -192,14 +143,6 @@ def unenroll_student(username: str, course_code: str) -> None:
 
 
 def get_course_materials(course_id: int) -> list:
-    """
-    Return all PDF materials uploaded for *course_id*.
-
-    Keys: material_id, course_id, material_name, pdf_name, pdf_path, upload_date
-
-    This is what StudentDashboard iterates over in the Modules tab.
-    It expects dicts with at least 'pdf_name' and 'pdf_path'.
-    """
     conn = _connect()
     rows = conn.execute("""
         SELECT material_id,
