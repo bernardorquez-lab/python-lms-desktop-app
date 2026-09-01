@@ -45,7 +45,7 @@ The application uses Object-Oriented Programming principles and Tkinter for the 
 ![Login Screen](Assets/login.jpg)
 
 ### Faculty Dashboard
-![Faculty Dashboard](Assets/Faculty%20Dashboard.jpg)
+![Faculty Dashboard](Faculty Dashboard.webp)
 
 ### Student Dashboard
 ![Student Dashboard](Assets/Student%20Dashboard.jpg)
