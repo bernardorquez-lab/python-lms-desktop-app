@@ -68,3 +68,37 @@ python-lms-desktop-app/
 
 ### Student Dashboard
 ![Student Dashboard](Assets/Student%20Dashboard.jpg)
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/bernardorquez-lab/python-lms-desktop-app.git
+```
+
+### 2. Navigate to the project folder
+
+```bash
+cd python-lms-desktop-app
+```
+
+### 3. Install dependencies
+
+```bash
+pip install Pillow
+```
+
+### 4. Run the application
+
+```bash
+python Login.py
+```
+
+---
+
+## Requirements
+
+- Python 3.x
+- Pillow
+- Tkinter (included with Python)
