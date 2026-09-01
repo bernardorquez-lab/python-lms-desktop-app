@@ -41,7 +41,6 @@ The application uses Object-Oriented Programming principles and Tkinter for the 
 
 ```text
 python-lms-desktop-app/
-│
 ├── Assets/
 │   └── Application images and resources
 │
@@ -59,7 +58,6 @@ python-lms-desktop-app/
 ├── danas.db
 └── README.md
 ```
-
 ## Screenshots
 
 ### Login Screen
