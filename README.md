@@ -38,3 +38,14 @@ The application uses Object-Oriented Programming principles and Tkinter for the 
 ---
 
 ## Project Structure
+
+## Screenshots
+
+### Login Screen
+![Login Screen](Assets/login.jpg)
+
+### Faculty Dashboard
+![Faculty Dashboard](Assets/Faculty%20Dashboard.jpg)
+
+### Student Dashboard
+![Student Dashboard](Assets/Student%20Dashboard.jpg)
