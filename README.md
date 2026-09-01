@@ -38,6 +38,24 @@ The application uses Object-Oriented Programming principles and Tkinter for the 
 ---
 
 ## Project Structure
+python-lms-desktop-app/
+│
+├── Assets/
+│ └── Application images and resources
+│
+├── Backend/
+│ ├── course_manager.py
+│ └── material_manager.py
+│
+├── Database/
+│ ├── database1.py
+│ └── student_engine.py
+│
+├── Login.py
+├── Student.py
+├── Faculty.py
+├── danas.db
+└── README.md
 
 ## Screenshots
 
